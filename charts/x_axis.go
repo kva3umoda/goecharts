@@ -55,10 +55,6 @@ func (axis *XAxis) MaxSetDataMax() *XAxis {
 	return axis
 }
 
-func (axis *XAxis) Scale(scale bool) *XAxis {
-	axis.axis.Scale = scale
-	return axis
-}
 
 // The boundary gap on both sides of a coordinate axis. The setting and behavior of category axes and non-category axes are different.
 func (axis *XAxis) BoundaryGap(value bool) *XAxis {

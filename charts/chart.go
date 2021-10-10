@@ -50,11 +50,12 @@ func (chart *BaseChart) ChartID() string {
 	return chart.id
 }
 
-func (chart *BaseChart) Dimension(name string, tp model.DataType) {
+func (chart *BaseChart) Dimension(name string, tp model.DataType) *BaseChart {
 	chart.dataset.Dimensions = append(chart.dataset.Dimensions,
 		model.Dimension{Name: name, Type: tp},
 	)
 
+	return chart
 }
 
 func (chart *BaseChart) DatasetRow(values ...interface{}) *BaseChart {

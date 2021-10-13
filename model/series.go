@@ -27,6 +27,12 @@ type Series struct {
 
 	// Text label of , to explain some data information about graphic item like value, name and so on
 	Label *Label `json:"label,omitempty"`
+
+	// Index of x axis to combine with, which is useful for multiple x axes in one chart.
+	XAxisIndex int `json:"xAxisIndex,omitempty"`
+
+	// Index of y axis to combine with, which is useful for multiple y axes in one chart.
+	YAxisIndex int `json:"yAxisIndex,omitempty"`
 }
 
 type SeriesType string

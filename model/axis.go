@@ -74,7 +74,7 @@ type AxisLabel struct {
 	// Set this to false to prevent the axis label from appearing.
 	Show bool `json:"show"`
 
-	// Interval of AxisXY label, which is available in category axis.
+	// Interval of XYAxis label, which is available in category axis.
 	// It uses a strategy that labels do not overlap by default.
 	// You may set it to be 0 to display all labels compulsively.
 	// If it is set to be 1, it means that labels are shown once after one label.

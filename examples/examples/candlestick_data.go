@@ -1,16 +1,8 @@
-package testing
+package examples
 
-import (
-	"testing"
-
-	"github.com/kva3umoda/goecharts/charts"
-	"github.com/kva3umoda/goecharts/model"
-	"github.com/kva3umoda/goecharts/render"
-	"github.com/stretchr/testify/assert"
-)
 
 var (
-	data0 = [][]interface{}{
+	dataCandlestick = [][]interface{}{
 		{"2013/1/24", 2320.26, 2320.26, 2287.3, 2362.94},
 		{"2013/1/25", 2300, 2291.3, 2288.26, 2308.38},
 		{"2013/1/28", 2295.35, 2346.5, 2295.35, 2346.92},
@@ -102,93 +94,16 @@ var (
 	}
 )
 
-func splitData(rawData [][]interface{}) (categoryData []interface{}, values [][]interface{}) {
-	categoryData = []interface{}{}
-	values = [][]interface{}{}
-	for _, data := range rawData {
-		categoryData = append(categoryData, data[0])
-		values = append(values, data[1:])
-	}
-	return
-}
-
-func Test_Candlestick_1(t *testing.T) {
-	//categoryData, values := splitData(data0)
-	const (
-		upColor         = "#ec0000"
-		upBorderColor   = "#8A0000"
-		downColor       = "#00da3c"
-		downBorderColor = "#008F28"
-	)
-	chart := charts.NewCartesian2D("test one").
-		DataZoomYAxis(model.DataZoomTypeInside, 50, 100).
-		DataZoomXAxis(model.DataZoomTypeSlider, 50, 100).
-		ToolTip(model.TriggerTypeAxis, model.PointerTypeCross)
-
-	chart.YAxis(model.AxisTypeValue).
-		ScaleEnabled().
-		SplitAreaEnabled()
-
-	chart.XAxis(model.AxisTypeCategory).
-		Scale(false).
-		BoundaryGap(false).
-		SplitLine(true).
-		MinSetDataMin().
-		MaxSetDataMax()
-
-	chart.Dimension("date", model.DataTime)
-	chart.Dimension("open", model.DataFloat)
-	chart.Dimension("close", model.DataFloat)
-	chart.Dimension("higher", model.DataFloat)
-	chart.Dimension("lower", model.DataFloat)
-
-	chart.AddSeriesCandlestick("APPL").
-		ItemStyleUpColor(upColor).
-		ItemStyleUpBorderColor(upBorderColor).
-		ItemStyleDownColor(downColor).
-		ItemStyleDownBorderColor(downBorderColor).
-		Dimension("date", "open", "close", "higher", "lower")
-
-	for _, values := range data0 {
-		chart.DatasetRow(values...)
-	}
-	/*
-		chart.AddSeriesLine("MA5").
-			Data(calculateMA(5)).
-			Smooth(true).
-			LineStyleOpacity(0.5)
-
-		chart.AddSeriesLine("MA10").
-			Data(calculateMA(10)).
-			Smooth(true).
-			LineStyleOpacity(0.5)
-
-		chart.AddSeriesLine("MA20").
-			Data(calculateMA(20)).
-			Smooth(true).
-			LineStyleOpacity(0.5)
-
-		chart.AddSeriesLine("MA30").
-			Data(calculateMA(30)).
-			Smooth(true).
-			LineStyleOpacity(0.5)
-	*/
-	page := render.NewPage()
-	page.AddCharts(chart)
-	err := page.RenderHTML("spce_1d.html")
-	assert.NoError(t, err)
-}
-
-func calculateMA(period int) []interface{} {
+func calculateMA(period int, data [][]interface{}) []interface{} {
 	var result = []interface{}{}
-	for i := range data0 {
+	for i := range data {
 		if i < period {
 			result = append(result, "-")
 			continue
 		}
 		sum := float32(0.0)
 		for j := 0; j < period; j++ {
-			sum += float32(data0[i-j][2].(float64))
+			sum += float32(data[i-j][2].(float64))
 		}
 		result = append(result, sum/float32(period))
 	}

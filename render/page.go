@@ -6,7 +6,6 @@ import (
 	"os"
 	"regexp"
 
-	"github.com/kva3umoda/goecharts/charts"
 	"github.com/kva3umoda/goecharts/model"
 	"github.com/kva3umoda/goecharts/templates"
 )
@@ -29,7 +28,7 @@ type Page struct {
 	Initialization
 	Assets
 
-	charts []charts.Chart
+	charts []Chart
 	Layout Layout
 }
 
@@ -48,7 +47,7 @@ func (page *Page) SetLayout(layout Layout) *Page {
 }
 
 // AddCharts adds new charts to the page.
-func (page *Page) AddCharts(charts ...charts.Chart) *Page {
+func (page *Page) AddCharts(charts ...Chart) *Page {
 	page.charts = append(page.charts, charts...)
 
 	return page
@@ -87,7 +86,9 @@ func (page *Page) Render(w io.Writer) error {
 func (page *Page) Charts() []ChartRender {
 	var charts []ChartRender
 	for _, chart := range page.charts {
-		charts = append(charts, ChartRender{Chart: chart, Initialization: page.Initialization})
+		chartRender := ChartRender{Chart: chart, Initialization: Initialization{}}
+		chartRender.Validate()
+		charts = append(charts, chartRender)
 	}
 
 	return charts

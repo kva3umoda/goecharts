@@ -1,8 +1,6 @@
 package model
 
-// YAxis is the option set for Y axis.
-// https://echarts.apache.org/en/option.html#yAxis
-type YAxis struct {
+type XYAxis struct {
 	// Name of axis.
 	Name string `json:"name,omitempty"`
 
@@ -64,4 +62,12 @@ type YAxis struct {
 	// * For non-category axis, including time, numerical value, and log axes, boundaryGap is an array of two values, representing the spanning range between minimum and maximum value. The value can be set in numeric value or relative percentage, which becomes invalid after setting min and max. Example:
 	//      boundaryGap: ['20%', '20%']
 	BoundaryGap interface{} `json:"boundaryGap,omitempty"`
+	// Minimum gap between split lines. For 'time' axis, MinInterval is in unit of milliseconds.
+	MinInterval float64 `json:"minInterval,omitempty"`
+
+	// Maximum gap between split lines. For 'time' axis, MaxInterval is in unit of milliseconds.
+	MaxInterval float64 `json:"maxInterval,omitempty"`
+
+	// Settings related to axis tick.
+	AxisTick *AxisTick `json:"axisTick,omitempty"`
 }

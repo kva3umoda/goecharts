@@ -7,146 +7,150 @@ import (
 var _ Series = (*Line)(nil)
 
 type Line struct {
-	series     *model.Series
+	*BaseSeries
 	markLines  *MarkLines
 	markPoints *MarkPoints
 }
 
-func NewLine(name string, coordinateSystem model.CoordinateSystem) *Line {
+func NewLine(index int, dimX string, dimY string, series *model.Series) *Line {
+	series.Type = model.SeriesTypeLine
+	series.Encode = &model.Encode{
+		X: []string{dimX},
+		Y: []string{dimY},
+	}
+
 	cs := &Line{
-		series: &model.Series{
-			Name:             name,
-			Type:             model.SeriesTypeLine,
-			CoordinateSystem: coordinateSystem, /*polar*/
-			Encode:           &model.Encode{},
-			AreaStyle:        nil},
+		BaseSeries: newBaseSeries(index, series),
 	}
 
 	return cs
 }
 
-func (s *Line) Type() model.SeriesType {
-	return s.series.Type
-}
-
-func (s *Line) Build() *model.Series {
-	return s.series
-}
-
-func (s *Line) SmoothEnabled() *Line {
-	s.series.Smooth = true
-
-	return s
-}
-
-func (s *Line) SmoothDisabled() *Line {
-	s.series.Smooth = false
+func (s *Line) Smooth(enable bool) *Line {
+	s.model.Smooth = enable
 
 	return s
 }
 
 func (s *Line) LineStyleColor(color string) *Line {
-	if s.series.LineStyle == nil {
-		s.series.LineStyle = &model.LineStyle{}
+	if s.model.LineStyle == nil {
+		s.model.LineStyle = &model.LineStyle{}
 	}
 
-	s.series.LineStyle.Color = color
+	s.model.LineStyle.Color = color
 
 	return s
 }
 
 func (s *Line) LineStyleWidth(width float32) *Line {
-	if s.series.LineStyle == nil {
-		s.series.LineStyle = &model.LineStyle{}
+	if s.model.LineStyle == nil {
+		s.model.LineStyle = &model.LineStyle{}
 	}
-	s.series.LineStyle.Width = width
+	s.model.LineStyle.Width = width
 
 	return s
 }
 
 func (s *Line) LineStyleType(tp model.LineType) *Line {
-	if s.series.LineStyle == nil {
-		s.series.LineStyle = &model.LineStyle{}
+	if s.model.LineStyle == nil {
+		s.model.LineStyle = &model.LineStyle{}
 	}
-	s.series.LineStyle.Type = tp
+	s.model.LineStyle.Type = tp
 
 	return s
 }
 
 func (s *Line) LineStyleOpacity(opacity float32) *Line {
-	if s.series.LineStyle == nil {
-		s.series.LineStyle = &model.LineStyle{}
+	if s.model.LineStyle == nil {
+		s.model.LineStyle = &model.LineStyle{}
 	}
-	s.series.LineStyle.Opacity = opacity
-
-	return s
-}
-
-func (s *Line) Dimension(x, y string) *Line {
-	s.series.Encode.X = []string{x}
-	s.series.Encode.Y = []string{y}
+	s.model.LineStyle.Opacity = opacity
 
 	return s
 }
 
 // Area properties
-func (s *Line) AreaEnabled() *Line {
-	if s.series.AreaStyle == nil {
-		s.series.AreaStyle = &model.AreaStyle{}
+func (s *Line) Area(enable bool) *Line {
+	if enable {
+		if s.model.AreaStyle == nil {
+			s.model.AreaStyle = &model.AreaStyle{}
+		}
+
+	} else {
+		s.model.AreaStyle = nil
 	}
 
 	return s
 }
 
-func (s *Line) AreaDisabled() *Line {
-	s.series.AreaStyle = nil
-	return s
-}
-
 // Stack properties
-func (s *Line) StackEnabled() *Line {
-	s.series.Stack = "Total"
-
-	return s
-}
-
-func (s *Line) StackDisabled() *Line {
-	s.series.Stack = ""
+func (s *Line) Stack(enable bool) *Line {
+	if enable {
+		s.model.Stack = "Total"
+	} else {
+		s.model.Stack = ""
+	}
 
 	return s
 }
 
 // Emphasis properties
-func (s *Line) EmphasisEnabled(scale bool, focus model.Focus, blurScope model.BlurScope) *Line {
-	if s.series.Emphasis == nil {
-		s.series.Emphasis = &model.Emphasis{}
+func (s *Line) EmphasisEnable(enable bool) *Line {
+	if enable {
+		if s.model.Emphasis == nil {
+			s.model.Emphasis = &model.Emphasis{}
+		}
+
+	} else {
+		s.model.Emphasis = nil
 	}
-	s.series.Emphasis.Scale = scale
-	s.series.Emphasis.Focus = focus
-	s.series.Emphasis.BlurScope = blurScope
+
 	return s
 }
 
-func (s *Line) EmphasisDisabled() *Line {
-	s.series.Emphasis = nil
+func (s *Line) EmphasisScale(scale bool) *Line {
+	if s.model.Emphasis == nil {
+		s.model.Emphasis = &model.Emphasis{}
+	}
+	s.model.Emphasis.Scale = scale
+	return s
+}
+
+
+func (s *Line) EmphasisFocus(focus model.Focus) *Line {
+	if s.model.Emphasis == nil {
+		s.model.Emphasis = &model.Emphasis{}
+	}
+	s.model.Emphasis.Focus = focus
+
+	return s
+}
+
+
+func (s *Line) EmphasisBlurScope(blurScope model.BlurScope) *Line {
+	if s.model.Emphasis == nil {
+		s.model.Emphasis = &model.Emphasis{}
+	}
+
+	s.model.Emphasis.BlurScope = blurScope
 	return s
 }
 
 // Label properties
-func (s *Line) LabelEnabled(position model.Position) *Line {
-	if s.series.Label == nil {
-		s.series.Label = &model.Label{}
+func (s *Line) LabelShow(show bool) *Line {
+	if s.model.Label == nil {
+		s.model.Label = &model.Label{}
 	}
-	s.series.Label.Show = true
-	s.series.Label.Position = position
+	s.model.Label.Show = show
 
 	return s
 }
 
-func (s *Line) LabelDisabled() *Line {
-	if s.series.Label != nil {
-		s.series.Label.Show = false
+func (s *Line) LabelPosition(position model.Position) *Line {
+	if s.model.Label == nil {
+		s.model.Label = &model.Label{}
 	}
+	s.model.Label.Position = position
 
 	return s
 }
@@ -156,7 +160,7 @@ func (s *Line) MarkLines() *MarkLines {
 		return s.markLines
 	}
 
-	s.markLines = newMarkLines(s.series)
+	s.markLines = newMarkLines(s.model)
 
 	return s.markLines
 }
@@ -166,7 +170,7 @@ func (s *Line) MarkPoints() *MarkPoints {
 		return s.markPoints
 	}
 
-	s.markPoints = newMarkPoints(s.series)
+	s.markPoints = newMarkPoints(s.model)
 
 	return s.markPoints
 }

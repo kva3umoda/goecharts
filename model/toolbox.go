@@ -8,7 +8,7 @@ type Toolbox struct {
 
 	// The layout orientation of toolbox's icon.
 	// Options: 'horizontal','vertical'
-	Orient string `json:"orient,omitempty"`
+	Orient Orient `json:"orient,omitempty"`
 
 	// Distance between toolbox component and the left side of the container.
 	// left value can be instant pixel value like 20; it can also be a percentage
@@ -57,10 +57,10 @@ type ToolBoxFeature struct {
 	DataZoom *ToolBoxFeatureDataZoom `json:"dataZoom,omitempty"`
 
 	// Data area zooming, which only supports rectangular coordinate by now.
-	MagicType interface{} `json:"magicType,omitempty"`
+	MagicType *ToolBoxFeatureMagicType `json:"magicType,omitempty"`
 
 	// Brush-selecting icon.
-	Brush interface{} `json:"brush,omitempty"`
+	Brush *ToolBoxFeatureBrush `json:"brush,omitempty"`
 }
 
 // ToolBoxFeatureSaveAsImage is the option for saving chart as image.
@@ -122,3 +122,36 @@ type ToolBoxFeatureRestore struct {
 	// title for the tool.
 	Title string `json:"title,omitempty"`
 }
+
+// Magic type switching
+// https://echarts.apache.org/en/option.html#toolbox.feature.magicType
+type ToolBoxFeatureMagicType struct {
+	// Whether to show the tool.
+	Show bool `json:"show"`
+
+	// title for the tool.
+	Title string `json:"title,omitempty"`
+
+	// Magic type switching
+	Type []string `json:"type,omitempty"`
+}
+
+// Brush-selecting icon.
+// https://echarts.apache.org/en/option.html#toolbox.feature.brush
+type ToolBoxFeatureBrush struct {
+	// Whether to show the tool.
+	Show bool `json:"show"`
+
+	// title for the tool.
+	Title string `json:"title,omitempty"`
+
+	// Magic type switching
+	Type []string `json:"type,omitempty"`
+}
+
+type Orient string
+
+const (
+	OrientHorizontal Orient = "horizontal"
+	OrientVertical   Orient = "vertical"
+)

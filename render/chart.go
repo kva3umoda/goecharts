@@ -1,11 +1,19 @@
 package render
 
 import (
-	"github.com/kva3umoda/goecharts/charts"
+	"html/template"
+
+	"github.com/kva3umoda/goecharts/model"
 )
 
+type Chart interface {
+	//ChartID() string
+	Build() *model.Option
+	JSONNotEscaped() template.HTML
+}
+
 type ChartRender struct {
-	charts.Chart
+	Chart
 	Initialization
 	JSFunctions
 }

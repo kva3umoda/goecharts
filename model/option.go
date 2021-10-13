@@ -14,13 +14,13 @@ type Option struct {
 	Legend *Legend `json:"legend,omitempty"`
 
 	// Drawing grid in rectangular coordinate. In a single grid, at most two X and Y axes each is allowed. Line chart, bar chart, and scatter chart (bubble chart) can be drawn in grid.
-	Grid *Grid `json:"grid,omitempty"`
+	Grids []*Grid `json:"grid,omitempty"`
 
 	// The x axis in cartesian(rectangular) coordinate. Usually a single grid component can place at most 2 x axis, one on the bottom and another on the top. offset can be used to avoid overlap when you need to put more than two x axis.
-	XAxis *XAxis `json:"xAxis,omitempty"`
+	XAxis []*XYAxis `json:"xAxis,omitempty"`
 
 	// The y axis in cartesian(rectangular) coordinate. Usually a single grid component can place at most 2 y axis, one on the left and another on the right. offset can be used to avoid overlap when you need to put more than two y axis.
-	YAxis *YAxis `json:"yAxis,omitempty"`
+	YAxis []*XYAxis `json:"yAxis,omitempty"`
 
 	// Polar coordinate can be used in scatter and line chart. Every polar coordinate has an angleAxis and a radiusAxis.
 	Polar *Polar `json:"polar,omitempty"`
@@ -71,8 +71,7 @@ type Option struct {
 	Graphic []*Graphic `json:"graphic,omitempty"`
 	// Calendar coordinates.
 	Calendar *Calendar `json:"calendar,omitempty"`
-	// dataset brings convenience in data management separated with styles and enables data reuse by different series. More importantly, it enables data encoding from data to visual, which brings convenience in some scenarios.
-	Dataset *Dataset  `json:"dataset,omitempty"`
+
 	Aria    *Aria     `json:"aria,omitempty"`
 	Series  []*Series `json:"series,omitempty"`
 
@@ -116,6 +115,9 @@ type Option struct {
 
 	// Whether to use UTC in display.
 	UseUTC bool `json:"useUTC,omitempty"`
+
+	// dataset brings convenience in data management separated with styles and enables data reuse by different series. More importantly, it enables data encoding from data to visual, which brings convenience in some scenarios.
+	Dataset *Dataset  `json:"dataset,omitempty"`
 }
 
 /*

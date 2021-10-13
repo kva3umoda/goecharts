@@ -1,87 +1,96 @@
 package series
 
-import "github.com/kva3umoda/goecharts/model"
+import (
+	"github.com/kva3umoda/goecharts/model"
+)
 
 var _ Series = (*CandleStick)(nil)
 
 type CandleStick struct {
-	series     *model.Series
+	*BaseSeries
+
 	markLines  *MarkLines
 	markPoints *MarkPoints
 }
 
-func NewCandleStick(name string) *CandleStick {
+func NewCandleStick(index int, dimDate, dimOpen, dimClose, dimHigh, dimLow string, series *model.Series) *CandleStick {
+
+	series.Type = model.SeriesTypeCandlestick
+	series.Encode = &model.Encode{
+		X: []string{dimDate},
+		Y: []string{dimClose, dimOpen, dimHigh, dimLow},
+	}
+
 	cs := &CandleStick{
-		series: &model.Series{
-			Name:             name,
-			Type:             model.SeriesTypeCandlestick,
-			CoordinateSystem: model.CoordinateSystemCartesian2d,
-			Encode:           &model.Encode{},
-		},
+		BaseSeries: newBaseSeries(index, series),
 	}
 
 	return cs
 }
 
+func (s *CandleStick) Index() int {
+	return s.index
+}
+
 func (s *CandleStick) Type() model.SeriesType {
-	return s.series.Type
+	return s.model.Type
 }
 
 func (s *CandleStick) Build() *model.Series {
-	return s.series
+	return s.model
 }
 
 func (s *CandleStick) ItemStyleUpColor(upColor string) *CandleStick {
-	if s.series.ItemStyle == nil {
-		s.series.ItemStyle = &model.ItemStyle{}
+	if s.model.ItemStyle == nil {
+		s.model.ItemStyle = &model.ItemStyle{}
 	}
-	s.series.ItemStyle.Color = upColor
+	s.model.ItemStyle.Color = upColor
 
 	return s
 }
 
 func (s *CandleStick) ItemStyleUpBorderColor(upBorderColor string) *CandleStick {
-	if s.series.ItemStyle == nil {
-		s.series.ItemStyle = &model.ItemStyle{}
+	if s.model.ItemStyle == nil {
+		s.model.ItemStyle = &model.ItemStyle{}
 	}
-	s.series.ItemStyle.BorderColor = upBorderColor
+	s.model.ItemStyle.BorderColor = upBorderColor
 
 	return s
 }
 
 func (s *CandleStick) ItemStyleDownColor(downColor string) *CandleStick {
-	if s.series.ItemStyle == nil {
-		s.series.ItemStyle = &model.ItemStyle{}
+	if s.model.ItemStyle == nil {
+		s.model.ItemStyle = &model.ItemStyle{}
 	}
 
-	s.series.ItemStyle.Color0 = downColor
+	s.model.ItemStyle.Color0 = downColor
 
 	return s
 }
 
 func (s *CandleStick) ItemStyleDownBorderColor(downBorderColor string) *CandleStick {
-	if s.series.ItemStyle == nil {
-		s.series.ItemStyle = &model.ItemStyle{}
+	if s.model.ItemStyle == nil {
+		s.model.ItemStyle = &model.ItemStyle{}
 	}
 
-	s.series.ItemStyle.BorderColor0 = downBorderColor
+	s.model.ItemStyle.BorderColor0 = downBorderColor
 
 	return s
 }
 
 func (s *CandleStick) ItemStyleOpacity(opacity float32) *CandleStick {
-	if s.series.ItemStyle == nil {
-		s.series.ItemStyle = &model.ItemStyle{}
+	if s.model.ItemStyle == nil {
+		s.model.ItemStyle = &model.ItemStyle{}
 	}
 
-	s.series.ItemStyle.Opacity = opacity
+	s.model.ItemStyle.Opacity = opacity
 
 	return s
 }
 
-func (s *CandleStick) Dimension(date, close, open, high, low string) *CandleStick {
-	s.series.Encode.X = []string{date}
-	s.series.Encode.Y = []string{close, open, high, low}
+func (s *CandleStick) DatasetDimension(date, close, open, high, low string) *CandleStick {
+	s.model.Encode.X = []string{date}
+	s.model.Encode.Y = []string{close, open, high, low}
 
 	return s
 }
@@ -91,7 +100,7 @@ func (s *CandleStick) MarkLines() *MarkLines {
 		return s.markLines
 	}
 
-	s.markLines = newMarkLines(s.series)
+	s.markLines = newMarkLines(s.model)
 
 	return s.markLines
 }
@@ -101,7 +110,7 @@ func (s *CandleStick) MarkPoints() *MarkPoints {
 		return s.markPoints
 	}
 
-	s.markPoints = newMarkPoints(s.series)
+	s.markPoints = newMarkPoints(s.model)
 
 	return s.markPoints
 }
